@@ -67,7 +67,7 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        namespace=robot_name_1,
+        namespace='rb1_robot',
         arguments=['joint_state_broadcaster', '--controller-manager', '/rb1_robot/controller_manager'],
         output='screen'
     )
@@ -80,13 +80,14 @@ def generate_launch_description():
                    "--controller-manager", "/rb1_robot/controller_manager"],
     )
 
-    position_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        namespace=robot_name_1,
-        arguments=["position_controller",
-                   "--controller-manager", "/rb1_robot/controller_manager"],
-    )
+
+    # position_controller_spawner = Node(
+    #     package="controller_manager",
+    #     executable="spawner",
+    #     namespace=robot_name_1,
+    #     arguments=["position_controller",
+    #                "--controller-manager", "/controller_manager"],
+    # )
 
     spawn_robot1 = Node(
         package='gazebo_ros',
@@ -101,6 +102,6 @@ def generate_launch_description():
         spawn_robot1,
         joint_state_broadcaster_spawner,
         diff_drive_controller_spawner,
-        position_controller_spawner
+        # position_controller_spawner
 
     ])

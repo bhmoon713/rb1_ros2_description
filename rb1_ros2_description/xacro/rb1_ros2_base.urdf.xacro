@@ -115,8 +115,8 @@
 	</xacro:sensor_orbbec_astra>
 
 
-    <!-- <gazebo>
-        <plugin name="box_bot_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
+    <gazebo>
+        <plugin name="rb1_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
         <ros>
             <namespace>/${robot_name}</namespace>
             <remapping>~/out:=joint_states</remapping>
@@ -128,7 +128,7 @@
         <joint_name>robot_elevator_platform_joint</joint_name>
        
         </plugin>
-    </gazebo> -->
+    </gazebo>
 
 	<!-- Gazebo ros2 control plugins -->
     <ros2_control name='GazeboSystem' type='system'>
@@ -166,28 +166,39 @@
   </gazebo>
   
   
-  <!-- Adding position control -->
-  <!-- <xacro:ros2_control/> -->
-  <ros2_control name="position_controllers_exercise" type="system">
-    <hardware>
-      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-    </hardware>
 
-    <joint name="lift_joint">
-      <command_interface name="position">
-        <param name="min">-2.0</param>
-        <param name="max">0</param>
-      </command_interface>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint>
+	<!-- Gazebo ros2 control plugins -->
+    <ros2_control name='GazeboSystem' type='system'>
+      <hardware>
+        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      </hardware>
+      <ros>
+        <namespace>/${robot_name}</namespace>
+        <remapping>/cmd_vel:=cmd_vel</remapping>
+      </ros>
+      <joint name='robot_left_wheel_joint'>
+        <command_interface name='velocity'>
+          <param name='min'>-10</param>
+          <param name='max'>10</param>
+        </command_interface>
+        <state_interface name='velocity'/>
+        <state_interface name='position'/>
+      </joint>
+      <joint name='robot_right_wheel_joint'>
+        <command_interface name='velocity'>
+          <param name='min'>-10</param>
+          <param name='max'>10</param>
+        </command_interface>
+        <state_interface name='velocity'/>
+        <state_interface name='position'/>
+      </joint>
+    </ros2_control>
 
-  </ros2_control>
-
+	<!-- <xacro:ros2_control/> -->
   <gazebo>
-    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-      <parameters>$(find rb1_ros2_description)/config/position_controller_config.yaml</parameters>
+    <plugin name='gazebo_ros2_control' filename='libgazebo_ros2_control.so'>
+      <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
+      <parameters>$(find rb1_ros2_description)/config/rb1_controller.yaml</parameters>
     </plugin>
   </gazebo>
 

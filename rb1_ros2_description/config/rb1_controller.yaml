@@ -1,37 +1,70 @@
-# Controller manager configuration
 controller_manager:
   ros__parameters:
     update_rate: 10  # Hz
-
-    ## Controllers available
-    rb1_base_controller:
-      type: diff_drive_controller/DiffDriveController
+    use_sim_rate: true
+    namespace: /rb1_robot
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
-      use_sim_time: true
 
-### Properties of the controllers that we will use and definition of joints to use ###
+    rb1_base_controller:
+      type: diff_drive_controller/DiffDriveController
+    
+    position_controller:
+      type: position_controllers/JointGroupPositionController
+
 rb1_base_controller:
   ros__parameters:
-    
-    publish_rate: 50.0 # Has to be a double otherwise errors are encountered
+    left_wheel_names: ["robot_left_wheel_joint"]
+    right_wheel_names: ["robot_right_wheel_joint"]
 
-    base_frame_id: rb1_robot/robot_base_footprint
+    wheel_separation: 0.433
+    #wheels_per_side: 1  # actually 2, but both are controlled by 1 signal
+    wheel_radius: 0.0762
 
-    left_wheel_names: ['rb1_robot/robot_left_wheel_joint']
-    right_wheel_names: ['rb1_robot/robot_right_wheel_joint']
-    wheel_separation: 0.436
-    wheel_radius: 0.076
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
 
-    # Obtained from https://wiki.ros.org/diff_drive_controller
-    pose_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
-    twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0] 
+    publish_rate: 50.0
+    odom_frame_id: odom
+    # odom_frame_id: robot_odom
+    base_frame_id: robot_base_footprint
+    pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
 
-    # Whether the input has a time stamp or not
+    open_loop: false
+    enable_odom_tf: true
+    position_feedback: true
+
+    cmd_vel_timeout: 0.5
+    #publish_limited_velocity: true
     use_stamped_vel: false
+    #velocity_rolling_window_size: 10
 
-    # Odometry fused with IMU is published by robot_localization, so no need to publish a TF
-    # based on encoders alone (https://wiki.ros.org/diff_drive_controller)
-    enable_odom_tf: false
+    # Velocity and acceleration limits
+    # Whenever a min_* is unspecified, default to -max_*
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.has_jerk_limits: false
+    linear.x.max_velocity: 1.0
+    linear.x.min_velocity: -1.0
+    linear.x.max_acceleration: 1.0
+    linear.x.max_jerk: 0.0
+    linear.x.min_jerk: 0.0
 
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.has_jerk_limits: false
+    angular.z.max_velocity: 1.0
+    angular.z.min_velocity: -1.0
+    angular.z.max_acceleration: 1.0
+    angular.z.min_acceleration: -1.0
+    angular.z.max_jerk: 0.0
+    angular.z.min_jerk: 0.0
+  
+position_controller:
+  ros__parameters:
+    joints:
+      - robot_evelator_platform_joint
+    interface_name: position
