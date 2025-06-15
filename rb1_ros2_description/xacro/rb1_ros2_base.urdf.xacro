@@ -125,6 +125,7 @@
 
         <joint_name>robot_left_wheel_joint</joint_name>
         <joint_name>robot_right_wheel_joint</joint_name>
+        <joint_name>robot_elevator_platform_joint</joint_name>
        
         </plugin>
     </gazebo>

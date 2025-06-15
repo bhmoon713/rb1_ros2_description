@@ -28,6 +28,8 @@ install(
     meshes
 	urdf
 	xacro
+	rviz
+	config
   DESTINATION
     share/${PROJECT_NAME}/
 )
