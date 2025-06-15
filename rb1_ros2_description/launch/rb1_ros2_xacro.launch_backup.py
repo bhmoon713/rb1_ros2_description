@@ -53,7 +53,7 @@ def generate_launch_description():
         "rb1_ros2_description"), "xacro", robot_desc_file)
 
     robot_name_1 = "rb1_robot"
-  
+
     rsp_robot1 = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -63,22 +63,6 @@ def generate_launch_description():
                      'robot_description': ParameterValue(Command(['xacro ', robot_desc_path, ' robot_name:=', robot_name_1]), value_type=str)}],
         output="screen"
     )
-
-    # joint_state_broadcaster_spawner = Node(
-    #     package='controller_manager',
-    #     executable='spawner',
-    #     namespace=robot_name_1,
-    #     arguments=['joint_state_broadcaster', '--controller-manager', '/rb1_robot/controller_manager'],
-    #     output='screen'
-    # )
-
-    # diff_drive_controller_spawner = Node(
-    #     package="controller_manager",
-    #     executable="spawner",
-    #     namespace=robot_name_1,
-    #     arguments=["rb1_base_controller",
-    #                "--controller-manager", "/rb1_robot/controller_manager"],
-    # )
 
     spawn_robot1 = Node(
         package='gazebo_ros',
@@ -91,7 +75,4 @@ def generate_launch_description():
         gazebo,
         rsp_robot1,
         spawn_robot1,
-        # joint_state_broadcaster_spawner,
-        # diff_drive_controller_spawner,
-
     ])
