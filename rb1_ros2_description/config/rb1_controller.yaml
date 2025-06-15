@@ -3,13 +3,13 @@ controller_manager:
   ros__parameters:
     update_rate: 10  # Hz
 
-    ### Controllers available
-    # rb1_base_controller:
-    #   type: diff_drive_controller/DiffDriveController
+    ## Controllers available
+    rb1_base_controller:
+      type: diff_drive_controller/DiffDriveController
 
-    # joint_state_broadcaster:
-    #   type: joint_state_broadcaster/JointStateBroadcaster
-    #   use_sim_time: true
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+      use_sim_time: true
 
 ### Properties of the controllers that we will use and definition of joints to use ###
 rb1_base_controller:
