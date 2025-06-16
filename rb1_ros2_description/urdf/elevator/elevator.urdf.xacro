@@ -65,7 +65,8 @@
 			<child link="${prefix}_platform_link" />
 			<axis xyz="0 0 1"/>
 			<limit effort="10.0" lower="0.0" upper="0.034" velocity="0.5"/>
-	</joint> 
+            <dynamics damping="0.1" friction="1.0"/>
+    </joint> 
 	<link name="${prefix}_platform_link">
 		<!--inertial>
 			<mass value="0.05" />

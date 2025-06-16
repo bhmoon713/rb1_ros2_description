@@ -98,3 +98,43 @@ ros2 topic pub /rb1_robot/position_controller/commands std_msgs/msg/Float64Multi
 **RB1 Simulation Team**  
 [https://www.robotnik.eu](https://www.robotnik.eu)  
 Feel free to fork, contribute, and file issues.
+
+
+ ros2 action send_goal /joint_trajectory_controller/follow_joint_trajectory control_msgs/action/FollowJointTrajectory "{trajectory: {joint_names: ['robot_elevator_platform_joint'], points: [{positions: [0.05], time_from_start: {sec: 1, nanosec: 0}}]}}"
+
+ ros2 action send_goal /joint_trajectory_controller/follow_joint_trajectory control_msgs/action/FollowJointTrajectory "{trajectory: {joint_names: ['robot_elevator_platform_joint'], points: [{positions: [0.00], time_from_start: {sec: 1, nanosec: 0}}]}}"
+
+
+ros2 topic pub --rate 10 /rb1_base_controller/cmd_vel_unstamped geometry_msgs/msg/Twist "{linear: {x: 0.0, y: 0, z: 0.0}, angular: {x: 0.0,y: 0.0, z: 0.2}}"
+
+
+[wait_for_service_node-5] [INFO] [1750051453.582879189] [rclcpp]: service not available, waiting again...
+[wait_for_service_node-5] [INFO] [1750051454.583005859] [rclcpp]: service not available, waiting again...
+
+
+
+There is considerable delay at Gazebo while it spawns robot, and need to wait it complete for launching ROS2 control nodes
+
+
+rb1_ros2_xacro_method1.launch.py  : Without delaying logic 
+rb1_ros2_xacro_method2.launch.py  : With delay
+rb1_ros2_xacro.launch.py  : With delay
+
+user:~$ ros2 control list_hardware_interfaces
+command interfaces
+        robot_elevator_platform_joint/position [claimed]
+        robot_left_wheel_joint/velocity [claimed]
+        robot_right_wheel_joint/velocity [claimed]
+state interfaces
+         robot_elevator_platform_joint/effort
+         robot_elevator_platform_joint/position
+         robot_elevator_platform_joint/velocity
+         robot_left_wheel_joint/position
+         robot_left_wheel_joint/velocity
+         robot_right_wheel_joint/position
+         robot_right_wheel_joint/velocity
+user:~$ ros2 control list_controllers
+joint_state_broadcaster[joint_state_broadcaster/JointStateBroadcaster] active
+rb1_base_controller [diff_drive_controller/DiffDriveController] active
+joint_trajectory_controller[joint_trajectory_controller/JointTrajectoryController] active
+user:~$

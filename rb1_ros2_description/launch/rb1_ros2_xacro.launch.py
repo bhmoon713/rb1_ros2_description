@@ -74,10 +74,10 @@ def generate_launch_description():
     )
 
     wait_for_controller_manager_service = Node(
-    package='rb1_ros2_description',  # Replace with the actual package name
-    executable='wait_for_service_node',  # Replace with the actual executable name
-    name='wait_for_controller_manager_service',
-    output='screen',
+        package='rb1_ros2_description',  # Replace with the actual package name
+        executable='wait_for_service_node',  # Replace with the actual executable name
+        name='wait_for_controller_manager_service',
+        output='screen',
     )
 
     load_joint_state_controller = ExecuteProcess(
