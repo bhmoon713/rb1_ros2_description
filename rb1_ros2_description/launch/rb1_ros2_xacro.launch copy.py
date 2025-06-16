@@ -52,7 +52,7 @@ def generate_launch_description():
     robot_desc_path = os.path.join(get_package_share_directory(
         "rb1_ros2_description"), "xacro", robot_desc_file)
 
-    robot_name_1 = ""
+    robot_name_1 = "rb1_robot"
   
     rsp_robot1 = Node(
         package='robot_state_publisher',
@@ -67,15 +67,17 @@ def generate_launch_description():
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        namespace=robot_name_1,
+        arguments=['joint_state_broadcaster', '--controller-manager', '/rb1_robot/controller_manager'],
         output='screen'
     )
 
     diff_drive_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
+        namespace=robot_name_1,
         arguments=["rb1_base_controller",
-                   "--controller-manager", "/controller_manager"],
+                   "--controller-manager", "/rb1_robot/controller_manager"],
         output='screen'
     )
 
@@ -83,8 +85,9 @@ def generate_launch_description():
     position_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
+        namespace=robot_name_1,
         arguments=["position_controller",
-                   "--controller-manager", "/controller_manager"],
+                   "--controller-manager", "/rb1_robot/controller_manager"],
         output='screen'
     )
 

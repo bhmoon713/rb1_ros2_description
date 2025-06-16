@@ -7,6 +7,9 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(controller_manager_msgs REQUIRED)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -28,7 +31,6 @@ install(
     meshes
 	urdf
 	xacro
-	rviz
 	config
   DESTINATION
     share/${PROJECT_NAME}/

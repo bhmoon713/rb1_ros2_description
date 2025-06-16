@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <robot name="rb1_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<xacro:property name="robot_name" value="$(arg robot_name)"/>
+<!-- <xacro:arg name="robot_name" default="rb1_robot"/> -->
 
 	<!-- ***************** -->
 	<!-- Imported elements -->
@@ -134,6 +136,10 @@
       <hardware>
         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
       </hardware>
+      <ros>
+        <namespace>/${robot_name}</namespace>
+        <remapping>/cmd_vel:=cmd_vel_unstamped</remapping>
+      </ros>
       <joint name='robot_left_wheel_joint'>
         <command_interface name='velocity'>
           <param name='min'>-10</param>
@@ -169,9 +175,10 @@
 
     <gazebo>
         <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <namespace>/${robot_name}</namespace>
             <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
             <robot_param>robot_description</robot_param>
-            <robot_param_node>/robot_state_publisher</robot_param_node>
+            <robot_param_node>/rb1_robot/robot_state_publisher</robot_param_node>
             <parameters>$(find rb1_ros2_description)/config/rb1_controller.yaml</parameters>
             <!-- <robotSimType>gazebo_ros2_control/DefaultRobotHWSim</robotSimType> -->
         </plugin>
