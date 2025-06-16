@@ -1,9 +1,8 @@
 import os
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, ExecuteProcess,RegisterEventHandler
+from launch.actions import IncludeLaunchDescription
 from launch.substitutions import Command, LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.event_handlers import OnProcessExit
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 from ament_index_python.packages import get_package_prefix
@@ -54,7 +53,7 @@ def generate_launch_description():
         "rb1_ros2_description"), "xacro", robot_desc_file)
 
     robot_name_1 = ""
-
+  
     rsp_robot1 = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -65,6 +64,29 @@ def generate_launch_description():
         output="screen"
     )
 
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        output='screen'
+    )
+
+    diff_drive_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["rb1_base_controller",
+                   "--controller-manager", "/controller_manager"],
+        output='screen'
+    )
+
+
+    position_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["position_controller",
+                   "--controller-manager", "/controller_manager"],
+        output='screen'
+    )
 
     spawn_robot1 = Node(
         package='gazebo_ros',
@@ -73,54 +95,12 @@ def generate_launch_description():
                    '-topic', robot_name_1+'/robot_description']
     )
 
-    wait_for_controller_manager_service = Node(
-    package='rb1_ros2_description',  # Replace with the actual package name
-    executable='wait_for_service_node',  # Replace with the actual executable name
-    name='wait_for_controller_manager_service',
-    output='screen',
-    )
-
-    load_joint_state_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
-             'joint_state_broadcaster'],
-        output='screen'
-    )
-
-    load_diff_drive_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
-             'rb1_base_controller'],
-        output='screen'
-    )
-
-    load_joint_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'start',
-             'joint_trajectory_controller'],
-        output='screen'
-    )
-
     return LaunchDescription([
         gazebo,
         rsp_robot1,
         spawn_robot1,
-        wait_for_controller_manager_service,
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=wait_for_controller_manager_service,
-                on_exit=[load_joint_state_controller],
-            )
-        ),
+        joint_state_broadcaster_spawner,
+        diff_drive_controller_spawner,
+        position_controller_spawner
 
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_state_controller,
-                on_exit=[load_diff_drive_controller],
-            )
-        ),
-
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_diff_drive_controller,
-                on_exit=[load_joint_controller],
-            )
-        ),
     ])
